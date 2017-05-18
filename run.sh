@@ -102,6 +102,9 @@ main() {
 
   h2 "Checking plugins"
   check_plugins
+  
+  h2 "Running post-plugins script"
+  after_plugins
 
   h2 "Finalizing"
   if [ ! -f /app/.htaccess ]; then
@@ -349,6 +352,13 @@ check_plugins() {
       STATUS $?
     fi
   done <<< "$(WP plugin list --field=name)"
+}
+
+after_plugins() {
+
+  if [ -n "$AFTER_PLUGINS" ]; then
+    . "$AFTER_PLUGINS"
+  fi  
 }
 
 

@@ -39,9 +39,10 @@ RUN echo "memory_limit = 512M" > /usr/local/etc/php/php.ini \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 # Install wp-cli, configure apache, & add scripts
+COPY /run.sh /run.sh
+RUN chmod +x /run.sh
 RUN curl \
         -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-        -o /run.sh https://raw.githubusercontent.com/visiblevc/wordpress-starter/master/run.sh \
     && chmod +x /usr/local/bin/wp /run.sh \
     && sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf \
     && a2enmod rewrite expires \
