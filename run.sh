@@ -124,11 +124,15 @@ main() {
 
   h3 "Adjusting file permissions"
   groupadd -f docker && usermod -aG docker www-data
-  find /app -type d -exec chmod 755 {} \;
-  find /app -type f -exec chmod 644 {} \;
+  if [ ! -n "$DEV_PERMS" ]; then
+    find /app -type d -exec chmod 755 {} \;
+    find /app -type f -exec chmod 644 {} \;
+  fi;
   mkdir -p /app/wp-content/uploads
-  chmod -R 775 /app/wp-content/uploads && \
-    chown -R :docker /app/wp-content/uploads
+  if [ ! -n "$DEV_PERMS" ]; then
+    chmod -R 775 /app/wp-content/uploads && \
+      chown -R :docker /app/wp-content/uploads
+  fi
   STATUS $?
 
   h1 "WordPress Configuration Complete!"
