@@ -126,7 +126,17 @@ main() {
   groupadd -f docker && usermod -aG docker www-data
   find /app -type d -exec chmod 755 {} \;
   find /app -type f -exec chmod 644 {} \;
+  
+  # init uploads
   mkdir -p /app/wp-content/uploads
+
+  if [ -z "$(ls -A /app/wp-content/uploads)" ]; then
+    echo "Empty"
+    cp -r /wp-content/uploads/* /app/wp-content/uploads/
+  else
+     echo "Not Empty"
+  fi
+
   chmod -R 775 /app/wp-content/uploads && \
     chown -R :docker /app/wp-content/uploads
   STATUS $?

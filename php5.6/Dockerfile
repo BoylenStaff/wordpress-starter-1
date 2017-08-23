@@ -41,9 +41,12 @@ RUN echo "memory_limit = 512M" > /usr/local/etc/php/php.ini \
 # Install wp-cli, configure apache, & add scripts
 COPY /run.sh /run.sh
 RUN chmod +x /run.sh
-RUN curl \
-        -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x /usr/local/bin/wp /run.sh \
+
+COPY /wp-cli-1.3.0.phar /usr/local/bin/wp
+#RUN curl \        -o /usr/local/bin/wp https://github.com/wp-cli/wp-cli/releases/download/v1.3.0/wp-cli-1.3.0.phar \
+
+RUN chmod +r /usr/local/bin/wp
+RUN chmod +x /usr/local/bin/wp /run.sh \
     && sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf \
     && a2enmod rewrite expires \
     && service apache2 restart
